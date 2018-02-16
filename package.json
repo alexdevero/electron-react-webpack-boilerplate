@@ -60,7 +60,7 @@
     "postcss-pxtorem": "^4.0.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "style-loader": "^0.20.1",
+    "style-loader": "^0.20.2",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1"
   }
