@@ -49,11 +49,11 @@ yarn
 #### Run the app
 
 ```
-npm run dev
+npm run start
 ```
 or
 ```
-yarn run dev
+yarn start
 ```
 
 #### Build the app (automatic)
@@ -63,7 +63,7 @@ npm run package
 ```
 or
 ```
-yarn run package
+yarn package
 ```
 
 #### Build the app (manual)
@@ -73,7 +73,7 @@ npm run build
 ```
 or
 ```
-npm run build
+yarn build
 ```
 
 #### Test the app (after `npm run build` || `yarn run build`)
@@ -81,7 +81,7 @@ npm run build
 npm run prod
 ```
 ```
-yarn run prod
+yarn prod
 ```
 
 ### Code of Conduct
