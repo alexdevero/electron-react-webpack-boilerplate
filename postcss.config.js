@@ -2,11 +2,11 @@ module.exports = {
   plugins: {
     'postcss-cssnext': {
       browsers: [
-        'Firefox >= 48',
-        'Chrome >= 54',
-        'ie >= 8',
+        'Firefox >= 58',
+        'Chrome >= 62',
+        'ie >= 10',
         'last 4 versions',
-        'Safari >= 8'
+        'Safari >= 9'
       ]
     },
     'postcss-import': {},
