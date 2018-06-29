@@ -43,9 +43,9 @@
     "postpackage": "electron-packager ./ --out=./builds"
   },
   "dependencies": {
-    "electron": "^2.0.2",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0"
+    "electron": "^2.0.3",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -63,8 +63,8 @@
     "postcss-nested": "^3.0.0",
     "postcss-pxtorem": "^4.0.1",
     "style-loader": "^0.21.0",
-    "webpack": "^4.9.1",
-    "webpack-cli": "^2.1.4",
+    "webpack": "^4.13.0",
+    "webpack-cli": "^3.0.8",
     "webpack-dev-server": "^3.1.4"
   }
 }
