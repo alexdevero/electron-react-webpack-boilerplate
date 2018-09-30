@@ -43,14 +43,14 @@
     "postpackage": "electron-packager ./ --out=./builds"
   },
   "dependencies": {
-    "electron": "^3.0.0",
+    "electron": "^3.0.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.0",
+    "@babel/core": "^7.1.2",
     "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.2",
+    "babel-loader": "^8.0.4",
     "babili-webpack-plugin": "^0.1.2",
     "css-loader": "^1.0.0",
     "electron-packager": "^12.1.2",
@@ -63,8 +63,8 @@
     "postcss-nested": "^4.1.0",
     "postcss-pxtorem": "^4.0.1",
     "style-loader": "^0.23.0",
-    "webpack": "^4.19.1",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.8"
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
   }
 }
