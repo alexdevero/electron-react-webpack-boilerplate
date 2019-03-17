@@ -8,6 +8,12 @@ class App extends React.Component {
         <h1>Hello, Electron!</h1>
 
         <p>I hope you enjoy using basic-electron-react-boilerplate to start your dev off right!</p>
+        
+        <p>
+          We are using node {document.write(process.versions.node)}, 
+          Chrome {document.write(process.versions.chrome)}, 
+          and Electron {document.write(process.versions.electron)}.   
+        </p>
       </div>
     )
   }
