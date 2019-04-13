@@ -40,17 +40,20 @@
     "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
     "build": "webpack --config webpack.build.config.js --mode production",
     "package": "npm run build && electron-packager ./ --out=./builds --platform=all",
-    "package-darwin": "npm run build && electron-packager ./ --out=./builds --platform=darwin"
+    "package-darwin": "npm run build && electron-packager ./ --out=./builds --platform=darwin --overwrite"
   },
   "dependencies": {
-    "electron": "^4.1.0",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "antd": "^3.16.2",
+    "electron": "^4.1.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "babel-loader": "^8.0.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.5",
     "babili-webpack-plugin": "^0.1.2",
     "css-loader": "^2.0.2",
     "electron-packager": "^13.1.1",
@@ -63,6 +66,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.1.2",
     "postcss-pxtorem": "^4.0.1",
+    "react-textarea-autosize": "^7.1.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
