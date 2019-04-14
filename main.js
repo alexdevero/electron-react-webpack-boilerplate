@@ -61,6 +61,11 @@ function createWindow() {
     }
   })
 
+  mainWindow.on('page-title-updated', function(e) {
+    e.preventDefault()
+  });
+  mainWindow.setTitle(require('./package.json').title);
+
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
