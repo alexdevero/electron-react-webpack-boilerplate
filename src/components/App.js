@@ -1,7 +1,7 @@
 import '../assets/css/App.css'
 import React, { Component } from 'react'
 
-class App extends React.Component {
+class App extends Component {
   render() {
     return (
       <div>
