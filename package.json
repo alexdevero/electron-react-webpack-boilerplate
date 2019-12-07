@@ -34,6 +34,9 @@
     "npm": ">=5.0.0",
     "yarn": ">=1.0.0"
   },
+  "browserslist": [
+    "last 4 versions"
+  ],
   "main": "main.js",
   "scripts": {
     "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
@@ -58,10 +61,10 @@
     "file-loader": "^5.0.2",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.8.0",
-    "postcss-cssnext": "^3.1.0",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.2.1",
+    "postcss-preset-env": "^6.7.0",
     "postcss-pxtorem": "^4.0.1",
     "style-loader": "^1.0.1",
     "webpack": "^4.41.2",
