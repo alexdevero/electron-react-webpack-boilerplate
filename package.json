@@ -48,8 +48,8 @@
     "react-dom": "^16.9.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
+    "@babel/core": "^7.7.5",
+    "@babel/preset-react": "^7.7.4",
     "babel-loader": "^8.0.6",
     "babili-webpack-plugin": "^0.1.2",
     "css-loader": "^3.2.0",
