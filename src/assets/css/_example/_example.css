@@ -1,22 +1,22 @@
 /* Example stylesheet */
 @media screen and (prefers-color-scheme: light), screen and (prefers-color-scheme: no-preference) {
-  /*light theme*/
+  /* Light theme */
   body{
-    color: black;
-    background-color: white;
+    color: #000;
+    background-color: #fff;
   }
 }
 
 @media screen and (prefers-color-scheme: dark) {
-  /*dark theme*/
+  /* Dark theme */
   body {
-    color: white;
-    background-color: black;
+    color: #fff;
+    background-color: #000;
   }
 }
 
 h1 {
-  font-family: helvetica;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 21px;
   font-weight: 200;
 }
