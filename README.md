@@ -23,6 +23,7 @@ Minimal Electron, React, PostCSS and Webpack boilerplate to help you get started
 
 * [Install](#install)
 * [Usage](#usage)
+* [Add Sass](#sass)
 * [Code of Conduct](#code-of-conduct)
 * [License](#license)
 
@@ -83,6 +84,27 @@ npm run prod
 ```
 yarn prod
 ```
+
+### Add Sass
+
+Adding Sass to boilerplate requires updating webpack configs and adding necessary loaders.
+
+1) To `webpack.build.config.js` and `webpack.dev.config.js` add new object to `rules`:
+
+```
+{
+  test: /\.scss$/,
+  use: [
+    { loader: 'style-loader' },
+    { loader: 'css-loader' },
+    { loader: 'sass-loader' }],
+  include: defaultInclude
+}
+```
+
+2) Install additional loaders for sass, `sass-loader` and `node-sass`.
+
+3) Rename all CSS file to `.scss`.
 
 ### Code of Conduct
 
