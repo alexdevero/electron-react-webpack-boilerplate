@@ -1,6 +1,6 @@
 {
   "name": "electron-react-webpack-boilerplate",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Minimal Electron, React, PostCSS and Webpack boilerplate to help you get started with building your next app.",
   "license": "MIT",
   "private": false,
