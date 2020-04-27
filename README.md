@@ -25,6 +25,7 @@ Minimal Electron, React, PostCSS and Webpack boilerplate to help you get started
 * [Usage](#usage)
 * [Add Sass](#add-sass)
 * [Change app title](#change-app-title)
+* [Contact and Support](#contact-and-support)
 * [Code of Conduct](#code-of-conduct)
 * [License](#license)
 
@@ -139,6 +140,20 @@ plugins: [
   })
 ],
 ```
+
+## Contact and Support
+
+I want your feedback! Here's a list of different ways to me and request help:
+* Report bugs and submit feature requests to [GitHub issues](https://github.com/alexdevero/electron-react-webpack-boilerplate/issues).
+<!-- * For private communications email me at foo@mail.com. -->
+* And do not forget to follow [@alexdevero](https://twitter.com/alexdevero) on Twitter!
+
+If you feel generous and want to show some extra appreciation:
+
+[![Buy me a coffee][buymeacoffee-shield]][buymeacoffee]
+
+[buymeacoffee]: https://www.buymeacoffee.com/alexdevero
+[buymeacoffee-shield]: https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png
 
 ### Code of Conduct
 
