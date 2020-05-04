@@ -11,8 +11,8 @@
 </p>
 
 <p align="center">
-  <a href="https://alexdevero.com"><img alt="Built by DEVERO" src="https://img.shields.io/badge/built%20by-DEVERO-brightgreen.svg?colorB=d30320"></a>
   <a href="https://github.com/alexdevero/electron-react-webpack-boilerplate/releases"><img alt="Current release" src="https://img.shields.io/github/release/alexdevero/electron-react-webpack-boilerplate.svg"></a>
+  <a href="https://patreon.com/alexdevero" rel="nofollow"><img src="https://camo.githubusercontent.com/c1eeb70a15e52f44437076a15999bb53101157f0/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f50617472656f6e2d537570706f7274212d2532334639363835342e7376673f6c6f676f3d70617472656f6e267374796c653d666c6174" alt="Patreon" data-canonical-src="https://img.shields.io/badge/Patreon-Support!-%23F96854.svg?logo=patreon&amp;style=flat" style="max-width:100%;"></a>
 </p>
 
 ## Minimal Electron, React and Webpack boilerplate
