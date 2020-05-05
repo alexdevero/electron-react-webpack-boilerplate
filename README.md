@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://paypal.me/alexdevero" rel="nofollow"><img src="https://img.shields.io/badge/Coffee-Donate-%2300457C.svg?logo=paypal&style=flat" alt="Paypal" data-canonical-src="https://img.shields.io/badge/Coffee-Donate-%2300457C.svg?logo=buy-me-a-coffee&style=flat" style="max-width:100%;"></a>
+  <a href="https://paypal.me/alexdevero" rel="nofollow"><img src="https://img.shields.io/badge/Paypal-Donate-%2300457C.svg?logo=paypal&style=flat" alt="Paypal" data-canonical-src="https://img.shields.io/badge/Paypal-Donate-%2300457C.svg?logo=buy-me-a-coffee&style=flat" style="max-width:100%;"></a>
   <a href="https://patreon.com/alexdevero" rel="nofollow"><img src="https://camo.githubusercontent.com/c1eeb70a15e52f44437076a15999bb53101157f0/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f50617472656f6e2d537570706f7274212d2532334639363835342e7376673f6c6f676f3d70617472656f6e267374796c653d666c6174" alt="Patreon" data-canonical-src="https://img.shields.io/badge/Patreon-Support!-%23F96854.svg?logo=patreon&amp;style=flat" style="max-width:100%;"></a>
   <a href="https://buymeacoffee.com/alexdevero" rel="nofollow"><img src="https://img.shields.io/badge/Coffee-Donate-%23FF813F.svg?logo=buy-me-a-coffee&style=flat" alt="buymeacoffee" data-canonical-src="https://img.shields.io/badge/Coffee-Donate-%23FF813F.svg?logo=buy-me-a-coffee&style=flat" style="max-width:100%;"></a>
 </p>
