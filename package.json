@@ -56,7 +56,7 @@
     "babili-webpack-plugin": "^0.1.2",
     "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
-    "electron": "^8.2.4",
+    "electron": "^9.0.0",
     "electron-devtools-installer": "^3.0.0",
     "electron-packager": "^14.2.1",
     "file-loader": "^6.0.0",
