@@ -46,7 +46,7 @@
     "postpackage": "electron-packager ./ --out=./builds"
   },
   "dependencies": {
-    "postcss": "^8.1.4",
+    "postcss": "^8.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
@@ -63,9 +63,9 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
     "mini-css-extract-plugin": "^1.2.1",
-    "postcss-import": "^13.0.0",
-    "postcss-loader": "^4.0.4",
-    "postcss-nested": "^5.0.1",
+    "postcss-import": "^14.0.0",
+    "postcss-loader": "^4.1.0",
+    "postcss-nested": "^5.0.3",
     "postcss-preset-env": "^6.7.0",
     "postcss-pxtorem": "^5.1.1",
     "style-loader": "^2.0.0",
