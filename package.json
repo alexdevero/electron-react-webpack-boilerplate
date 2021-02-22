@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.17",
     "@babel/preset-react": "^7.12.10",
     "babel-loader": "^8.2.2",
     "cross-env": "^7.0.3",
