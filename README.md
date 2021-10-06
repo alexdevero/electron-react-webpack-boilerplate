@@ -116,36 +116,31 @@ Adding Sass to boilerplate requires updating webpack configs and adding necessar
 
 If you don't want to do all these steps, you can clone [This Repository](https://github.com/Sanan4li/React-Electron-TailwindCSS-Boilerplate) and you are good to go.
 
-
-Adding TainwindCSS to boilerplate requires adding all the dependencies listed on the tailwindcss website for `create react app` [Official Guide](https://tailwindcss.com/docs/guides/create-react-app). 
-
-Or follow these steps
+Adding TainwindCSS to boilerplate requires adding all the dependencies listed on the tailwindcss website for `create react app` [Official Guide](https://tailwindcss.com/docs/guides/create-react-app). OR follow these steps
 
 1) install `tailwindcss`, `postcss` and `autoprefixer`.
 
 ```
 npm install -D tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
-
 ```
 
-2) Install `carco`.
+2) Install `craco`.
 
 ```
 npm install @craco/craco
-
 ```
 
 
-3) Open `package.json` file and find `start`, `build` scripts under `scripts`.
+3) Open `package.json` file, find `start` and `build` scripts under `scripts`.
 
 4) Add `&& craco start` at the end  in `start` and `build` scripts. You also have to add `build-css` script to build the CSS styles using tailwindCSS. `"build-css": "npx tailwindcss build  -o src/styles/main.css",`. You can choose output folder of your own choice. Here are the three scripts after changing/adding. 
 
-```JavaScript
+```json
 "start": "cross-env NODE_ENV=development webpack serve --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development && craco start",
     "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production && craco build",
 "build-css": "npx tailwindcss build  -o src/styles/main.css",
-
 ```
+
 5) Now, create `carco.config.js` file in your project at root of your project and add the following.
 
 ```JavaScript
@@ -159,13 +154,12 @@ module.exports = {
     },
   },
 }
-
 ```
+
 6) Next, generate your tailwind.config.js file:
 
 ```
 npx tailwindcss-cli@latest init
-
 ```
 This will create a minimal tailwind.config.js file at the root of your project.
 
@@ -186,15 +180,16 @@ In your `tailwind.config.js` file, configure the purge option with the paths to 
     },
     plugins: [],
   }
-
 ```
+
 8) Add `main.css` file in `app.js`. Make sure you choose correct path for CSS file.
+
 ```
 import '../styles/main.css' 
-
 ``` 
+
 9) You may have to run `npm install tailwindcss@latest postcss@latest autoprefixer@latest` if you face different version issues. 
-10) You can also check [JIT Mode In TailwindCSS](https://tailwindcss.com/docs/just-in-time-mode#enabling-jit-mode) if you want to use Jut In Time Mode.
+10) You can also check [JIT Mode In TailwindCSS](https://tailwindcss.com/docs/just-in-time-mode#enabling-jit-mode) if you want to use Just In Time Mode.
 
 
 ### Change app title
