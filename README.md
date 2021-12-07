@@ -141,7 +141,7 @@ npm install @craco/craco
 "build-css": "npx tailwindcss build  -o src/styles/main.css",
 ```
 
-5) Now, create `carco.config.js` file in your project at root of your project and add the following.
+5) Now, create `craco.config.js` file in your project at root of your project and add the following.
 
 ```JavaScript
 module.exports = {
