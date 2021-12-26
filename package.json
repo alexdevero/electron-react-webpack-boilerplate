@@ -46,31 +46,31 @@
     "postpackage": "electron-packager ./ --out=./builds"
   },
   "dependencies": {
-    "postcss": "^8.3.6",
+    "postcss": "^8.4.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.0",
-    "@babel/preset-env": "^7.15.0",
-    "@babel/preset-react": "^7.14.5",
-    "babel-loader": "^8.2.2",
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.5",
+    "babel-loader": "^8.2.3",
     "cross-env": "^7.0.3",
-    "css-loader": "^6.2.0",
-    "electron": "^13.1.9",
+    "css-loader": "^6.5.1",
+    "electron": "^13.6.3",
     "electron-devtools-installer": "^3.2.0",
-    "electron-packager": "^15.3.0",
+    "electron-packager": "^15.4.0",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.3.2",
-    "mini-css-extract-plugin": "^2.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.4.5",
     "postcss-import": "^14.0.2",
-    "postcss-loader": "^6.1.1",
+    "postcss-loader": "^6.2.1",
     "postcss-nested": "^5.0.6",
-    "postcss-preset-env": "^6.7.0",
+    "postcss-preset-env": "^7.1.0",
     "postcss-pxtorem": "^6.0.0",
-    "style-loader": "^3.2.1",
-    "webpack": "^5.49.0",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^3.11.2"
+    "style-loader": "^3.3.1",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^3.11.3"
   }
 }
