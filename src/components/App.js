@@ -1,5 +1,6 @@
 import React from 'react';
-import Spreadsheet from '../scripts/spreadsheet.js';
+import Spreadsheet from '../scripts/Spreadsheet.js';
+
 
 const config = require('../config/config.json');
 const auth = require('../config/Inventory-System-Auth.json');
@@ -20,10 +21,10 @@ function App() {
 		ss.init(config, auth);
 	},[]);
 	
-	
+	//<a href="https://www.barcodesinc.com/generator/"><img src="https://www.webarcode.com/barcode/image.php?code=022081230107&type=C128B&xres=1&height=50&width=206&font=3&output=png&style=197" alt="the barcode printer: free barcode generator" border="0"></a>
 	
 	const onScan = function(s){
-		ss.addItemByPN(s);
+		ss.addItemByScan(s);
 		setScan(s);
 	}
 	

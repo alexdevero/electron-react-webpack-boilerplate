@@ -2,6 +2,10 @@ import {GoogleSpreadsheet} from 'google-spreadsheet';
 import 'regenerator-runtime/runtime';
 const async = require('async');
 
+
+import BarcodeParser from '../scripts/BarcodeParser.js';
+const bp = BarcodeParser();
+
 /////////////////////////////////////////////////////
 // EXTERNAL FUNCTIONS
 /////////////////////////////////////////////////////
@@ -10,15 +14,15 @@ const init = function(config, auth){
 	let task = new initTask(config, auth);
 	queueTask(task);
 }
-const addItemByPN = function(partNumber, amount){
-	let task = new addTask(partNumber, amount);
+const addItemByScan = function(scanInput, amount){
+	let task = new addTask(scanInput, amount);
 	queueTask(task);
 }
 
 const Spreadsheet = function(){
 	return ({
-		init:init,
-		addItemByPN:addItemByPN,
+		init,
+		addItemByScan,
 	});
 }
 
@@ -35,9 +39,9 @@ const initTask = function(config, auth){
 	this.auth = auth;
 }
 
-const addTask = function(pn, amt){
+const addTask = function(scan, amt){
 	this.type = 'add';
-	this.pn = pn;
+	this.scan = scan;
 	this.amt = amt ? amt : 1;
 }
 
@@ -49,7 +53,7 @@ const queue = async.queue(async (task, callback) => {
 			await load(task.config, task.auth);
 			break;
 		case 'add':
-			await addPN(task.pn, task.amt);
+			await addScan(task.scan, task.amt);
 			break;
 		default:
 			console.log('Error: Spreadsheet queue recieved unknown task.');
@@ -83,7 +87,15 @@ let invWorksheet;
 let invHeaderIndexToName = [];
 let invHeaderNameToIndex = {};
 
-let invPnToRow = {};
+let invBCToRow = {};
+
+let catWorksheet;
+let catHeaderIndexToName = [];
+let catHeaderNameToIndex = {};
+
+let oidToOwner = [];
+let cidToCondition = [];
+let midToManufacturer = {};
 
 const load = async function(config, auth){
 	try{
@@ -111,6 +123,23 @@ const load = async function(config, auth){
             invHeaderIndexToName[i] = cell.value;
 		}
 		
+		catWorksheet = doc.sheetsByTitle["Categories"];
+		console.log("Loading categories headers...");
+		await catWorksheet.loadCells({
+			"startRowIndex": 0,
+			"endRowIndex": 1,
+			"startColumnIndex": 0,
+			"endColumnIndex": catWorksheet.columnCount
+		});
+		
+		for(let i = 0; i < catWorksheet.columnCount; i++){
+			let cell = catWorksheet.getCell(0,i);
+			if(cell.value == null)
+				break;
+			catHeaderNameToIndex[cell.value] = i;
+            catHeaderIndexToName[i] = cell.value;
+		}
+		
 		console.log("Loading inventory...");
 	
 		await invWorksheet.loadCells({
@@ -120,12 +149,48 @@ const load = async function(config, auth){
 			"endColumnIndex": invWorksheet.columnCount
 		});
 		
-		let c = invHeaderNameToIndex["Part Number"];
+		console.log("Loading categories...");
+	
+		await catWorksheet.loadCells({
+			"startRowIndex": 1,
+			"endRowIndex": catWorksheet.rowCount,
+			"startColumnIndex": 0,
+			"endColumnIndex": catWorksheet.columnCount
+		});
+		
+		
+		//invBCToRow
+		let c = invHeaderNameToIndex["Barcode Number"];
 		for(let r = 1; r < invWorksheet.rowCount; r++){
 			let cell = invWorksheet.getCell(r,c);
 			if(cell.value == null)
 				continue;
-			invPnToRow[cell.value] = r;
+			invBCToRow[cell.value] = r;
+		}
+		
+		//oidToOwner
+		c = catHeaderNameToIndex["OwnerID"];
+		for(let r = 1; r < catWorksheet.rowCount; r++){
+			let cell = catWorksheet.getCell(r,c);
+			if(cell.value == null)
+				break;
+			oidToOwner[cell.value] = catWorksheet.getCell(r,c+1).value;
+		}
+		//cidToCondition
+		c = catHeaderNameToIndex["ConditionID"];
+		for(let r = 1; r < catWorksheet.rowCount; r++){
+			let cell = catWorksheet.getCell(r,c);
+			if(cell.value == null)
+				break;
+			cidToCondition[cell.value] = catWorksheet.getCell(r,c+1).value;
+		}
+		//midToManufacturer
+		c = catHeaderNameToIndex["ManufacturerID"];
+		for(let r = 1; r < catWorksheet.rowCount; r++){
+			let cell = catWorksheet.getCell(r,c);
+			if(cell.value == null)
+				break;
+			midToManufacturer[cell.value] = catWorksheet.getCell(r,c+1).value;
 		}
 		
 		console.log("Done.");
@@ -135,7 +200,7 @@ const load = async function(config, auth){
 	}
 	
 }
-
+/*
 const getItemByPN = function(partNumber){
 	let r = invPnToRow[partNumber];
 	if(r == null)
@@ -151,25 +216,48 @@ const getItemByPN = function(partNumber){
 	}
 	return item;
 }
+*/
 
-const addPN = async function(partNumber, amount){
+const addScan = async function(scanInput, amount){
 	try{
-		let r = invPnToRow[partNumber];
+		let data = bp.parse(scanInput);
+		let r = invBCToRow[data.barcode];
 		let cell;
+		
 		if(r == null){
+			//New Item
 			//low on space add rows
-			r = Object.keys(invPnToRow).length + 1;
+			r = Object.keys(invBCToRow).length + 1;
 			if(r == invWorksheet.rowCount){
 				await invWorksheet.resize({
 					rowCount: invWorksheet.rowCount + 100, 
 					columnCount: invWorksheet.columnCount
 				});
+				await invWorksheet.loadCells({
+					"startRowIndex": 1,
+					"endRowIndex": invWorksheet.rowCount,
+					"startColumnIndex": 0,
+					"endColumnIndex": invWorksheet.columnCount
+				});
 			}
 			
-			//new item create entry
-			invPnToRow[partNumber] = r;
-			cell = invWorksheet.getCell(r, invHeaderNameToIndex["Part Number"]);
-			cell.value = partNumber;
+			//add to dictionary
+			invBCToRow[data.barcode] = r;
+			//insert barcode
+			cell = invWorksheet.getCell(r, invHeaderNameToIndex["Barcode Number"]);
+			cell.value = data.barcode;
+			if(data.pn){
+				cell = invWorksheet.getCell(r, invHeaderNameToIndex["Part Number"]);
+				cell.value = data.pn;
+			}
+			if(data.id){
+				cell = invWorksheet.getCell(r, invHeaderNameToIndex["Manufacturer"]);
+				let m = data.id;
+				if(midToManufacturer[data.id]){
+					m = midToManufacturer[data.id];
+				}
+				cell.value = m;
+			}
 			
 		}
 		
