@@ -1,0 +1,123 @@
+.Nav.main{
+    background-color: #58E3F5;
+    width: 100%;
+    height: 6rem;
+    border: none;
+    border-bottom: 0.1rem solid #ffffff;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+}
+.Nav.main.right{
+    justify-content: flex-end;
+}
+
+.Nav.logo{
+    margin-top: 0rem;
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+    max-width: 6rem;
+    max-height: 6rem;    
+    border-bottom: none;
+}
+
+.Nav.title{
+    color: #ffffff;
+    font-family: Verdana, Geneva, sans-serif;
+    font-weight: 600;
+    font-size: 50px; 
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
+.Nav.inactive{
+    display: none;
+}
+.Nav.active{
+    display: flex;
+}
+
+
+.menuOption:link{
+    text-decoration: none;
+}
+.tab{
+    font-family: Fira Sans;
+    font-size: 20px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    margin-left: 1.5rem;
+    color: #5353537a;
+
+  }
+  
+  
+.tab:hover {
+    color: #000000;
+    text-decoration: underline #fb9b00;
+    text-underline-offset: 0.5rem;
+  }
+
+
+.Nav.logout{
+    opacity: 0.5;
+    margin-top: 0.75rem;
+    margin-right: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.logout:hover{
+    opacity: 1.0;
+}
+
+.login{
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 20px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    margin-left: 1.5rem;
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+  
+  
+.login:hover {
+    color: #000000;
+    text-decoration: underline #fb9b00;
+    text-underline-offset: 0.5rem;
+  }
+
+  .active.Nav.name{
+      font-size: 20px;
+      font-family: Fira Sans;
+      margin: 1rem;
+      margin-top: 2rem;
+
+  }
+
+  .profilename{
+      text-decoration: none;
+      margin: 1rem;
+      margin-top: 0.5rem;
+      opacity: 0.5;
+      color: #000000
+  }
+
+  .profilename:hover{
+    opacity: 1.0;
+  }
+
+  .profilename:link:visited:active{
+      text-decoration: none;
+  }
+
+
+
+
+
+
+
+
+
+

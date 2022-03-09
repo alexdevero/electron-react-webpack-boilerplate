@@ -8,6 +8,7 @@ builds/
 dist/
 node_modules/
 *.compiled.*
+src/config
 
 # Folder config file #
 ######################
