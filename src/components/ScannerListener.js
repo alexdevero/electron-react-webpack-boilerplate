@@ -14,29 +14,30 @@ function ScannerListener({onScan}) {
 		_setInput(i);
 	}
 	
-	const [active, _setActive] = React.useState(false);
-	const activeRef = React.useRef(active);
-	const setActive = (value) => {
-		activeRef.current = value;
-		_setActive(value);
+	const [time, _setTime] = React.useState(0);
+	const timeRef = React.useRef(time);
+	const setTime = (t) => {
+		timeRef.current = t;
+		_setTime(t);
 	}
 	
-	//const [prefix, _setPrefix] = React.useState(false);
-	//const prefixRef = React.useRef(prefix);
-	//const setPrefix = (value) => {
-	//	prefixRef.current = value;
-	//	_setPrefix(value);
-	//}
-	
 	const inputHandler = function(e){
+		if(e.key == 'Enter'){
+			e.preventDefault();
+		}
+		
 		if(e.key == prefix){
 			setInput(inputRef.current.substr(-1));
-			setActive(true);
-		}else if(e.key == suffix && activeRef.current){
-			onScan(inputRef.current);
+			setTime(Date.now());
+		}else if(e.key == suffix){
+			//scan should be input fast
+			if(Date.now() - timeRef.current < 200){
+				onScan(inputRef.current);
+			}
+			//reset
 			setInput('');
-			setActive(false);
-		}else if(activeRef.current){
+			setTime(0);
+		}else if(timeRef.current > 0){
 			setInput(inputRef.current + e.key);
 		}else{
 			setInput(e.key);
@@ -51,6 +52,10 @@ function ScannerListener({onScan}) {
 
 		// Add event listener
 		window.addEventListener('keydown', inputHandler);
+		
+		return (() => {
+			window.removeEventListener('keydown', inputHandler);
+		})
 		
 	},[]);
 

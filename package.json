@@ -47,6 +47,8 @@
   },
   "dependencies": {
     "async": "^3.2.3",
+    "canvas": "^2.9.0",
+    "dymojs": "^1.2.0",
     "google-spreadsheet": "^3.2.0",
     "postcss": "^8.4.5",
     "react": "^17.0.2",

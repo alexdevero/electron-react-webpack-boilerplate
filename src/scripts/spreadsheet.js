@@ -1,205 +1,127 @@
 import {GoogleSpreadsheet} from 'google-spreadsheet';
 import 'regenerator-runtime/runtime';
-const async = require('async');
-
-
 import BarcodeParser from '../scripts/BarcodeParser.js';
+
 const bp = BarcodeParser();
-
-/////////////////////////////////////////////////////
-// EXTERNAL FUNCTIONS
-/////////////////////////////////////////////////////
-
-const init = function(config, auth){
-	let task = new initTask(config, auth);
-	queueTask(task);
-}
-const addItemByScan = function(scanInput, amount){
-	let task = new addTask(scanInput, amount);
-	queueTask(task);
-}
-
-const Spreadsheet = function(){
-	return ({
-		init,
-		addItemByScan,
-	});
-}
-
-export default Spreadsheet;
-
-//////////////////////////////////////////////////
-//INTERNAL FUNCTIONS
-//////////////////////////////////////////////////
-
-//object generators for task to que
-const initTask = function(config, auth){
-	this.type = 'init';
-	this.config = config;
-	this.auth = auth;
-}
-
-const addTask = function(scan, amt){
-	this.type = 'add';
-	this.scan = scan;
-	this.amt = amt ? amt : 1;
-}
-
-// function run on queued tasks
-const queue = async.queue(async (task, callback) => {
-	console.log("Processing task: " + task.type);
-	switch(task.type){
-		case 'init':
-			await load(task.config, task.auth);
-			break;
-		case 'add':
-			await addScan(task.scan, task.amt);
-			break;
-		default:
-			console.log('Error: Spreadsheet queue recieved unknown task.');
-	}
-	callback(null, {task});
-}, 1);
-
-//add tasks to que
-const queueTasks = function(tasks){
-	queue.push(tasks, (err, {task}) => {
-		if(err){
-			console.log('An error occurred while processing task: ' + task.type);
-			return;
-		}
-		console.log('Finished task: ' + task.type);
-	});
-}
-
-const queueTask = function(task){
-	queueTasks([task]);
-}
-
-//call when que has nothing to run
-queue.drain(() => {
-   console.log('All items are succesfully processed !');
-});
-
-let docInfo;
 
 let invWorksheet;
 let invHeaderIndexToName = [];
 let invHeaderNameToIndex = {};
-
 let invBCToRow = {};
 
-let catWorksheet;
-let catHeaderIndexToName = [];
-let catHeaderNameToIndex = {};
+let siWorksheet;
+let siHeaderIndexToName = [];
+let siHeaderNameToIndex = {};
+let siBCToRow = {};
 
-let oidToOwner = [];
-let cidToCondition = [];
-let midToManufacturer = {};
+let manWorksheet;
+let manHeaderIndexToName = [];
+let manHeaderNameToIndex = {};
+let manToID = {};
+let idToMan = {};
 
-const load = async function(config, auth){
+const customPre = 27;
+
+
+//params is [config, auth]
+const init = async function(params){
 	try{
-		let doc = new GoogleSpreadsheet(config.spreadsheet_id);
+		let doc = new GoogleSpreadsheet(params[0].spreadsheet_id);
+		
 		console.log("Authenticating...");
-		await doc.useServiceAccountAuth(auth);
+		await doc.useServiceAccountAuth(params[1]);
+		
 		console.log("Loading document information...");
 		await doc.getInfo();
-		docInfo = doc;
-		
 		invWorksheet = doc.sheetsByTitle["Inventory"];
-		console.log("Loading inventory headers...");
+		siWorksheet = doc.sheetsByTitle["Special Inventory"];
+		manWorksheet = doc.sheetsByTitle["Manufacturers"];
+		
+		console.log("Loading Cells...");
 		await invWorksheet.loadCells({
 			"startRowIndex": 0,
-			"endRowIndex": 1,
-			"startColumnIndex": 0,
-			"endColumnIndex": invWorksheet.columnCount
-		});
-		
-		for(let i = 0; i < invWorksheet.columnCount; i++){
-			let cell = invWorksheet.getCell(0,i);
-			if(cell.value == null)
-				break;
-			invHeaderNameToIndex[cell.value] = i;
-            invHeaderIndexToName[i] = cell.value;
-		}
-		
-		catWorksheet = doc.sheetsByTitle["Categories"];
-		console.log("Loading categories headers...");
-		await catWorksheet.loadCells({
-			"startRowIndex": 0,
-			"endRowIndex": 1,
-			"startColumnIndex": 0,
-			"endColumnIndex": catWorksheet.columnCount
-		});
-		
-		for(let i = 0; i < catWorksheet.columnCount; i++){
-			let cell = catWorksheet.getCell(0,i);
-			if(cell.value == null)
-				break;
-			catHeaderNameToIndex[cell.value] = i;
-            catHeaderIndexToName[i] = cell.value;
-		}
-		
-		console.log("Loading inventory...");
-	
-		await invWorksheet.loadCells({
-			"startRowIndex": 1,
 			"endRowIndex": invWorksheet.rowCount,
 			"startColumnIndex": 0,
 			"endColumnIndex": invWorksheet.columnCount
 		});
 		
-		console.log("Loading categories...");
-	
-		await catWorksheet.loadCells({
-			"startRowIndex": 1,
-			"endRowIndex": catWorksheet.rowCount,
+		await siWorksheet.loadCells({
+			"startRowIndex": 0,
+			"endRowIndex": siWorksheet.rowCount,
 			"startColumnIndex": 0,
-			"endColumnIndex": catWorksheet.columnCount
+			"endColumnIndex": siWorksheet.columnCount
 		});
 		
+		await manWorksheet.loadCells({
+			"startRowIndex": 0,
+			"endRowIndex": manWorksheet.rowCount,
+			"startColumnIndex": 0,
+			"endColumnIndex": manWorksheet.columnCount
+		});
 		
+		console.log("Mapping Headers/Columns...");
+		
+		let cell;
+		for(let i = 0; i < invWorksheet.columnCount; i++){
+			cell = invWorksheet.getCell(0,i);
+			if(cell.value == null)
+				break;
+			invHeaderNameToIndex[cell.value] = i;
+            invHeaderIndexToName[i] = cell.value;
+		}
+		for(let i = 0; i < siWorksheet.columnCount; i++){
+			cell = siWorksheet.getCell(0,i);
+			if(cell.value == null)
+				break;
+			siHeaderNameToIndex[cell.value] = i;
+            siHeaderIndexToName[i] = cell.value;
+		}
+		for(let i = 0; i < manWorksheet.columnCount; i++){
+			cell = manWorksheet.getCell(0,i);
+			if(cell.value == null)
+				break;
+			manHeaderNameToIndex[cell.value] = i;
+            manHeaderIndexToName[i] = cell.value;
+		}
+		
+		console.log("Mapping Rows...");
 		//invBCToRow
 		let c = invHeaderNameToIndex["Barcode Number"];
 		for(let r = 1; r < invWorksheet.rowCount; r++){
-			let cell = invWorksheet.getCell(r,c);
+			cell = invWorksheet.getCell(r,c);
 			if(cell.value == null)
 				continue;
 			invBCToRow[cell.value] = r;
 		}
+		//siBCToRow
+		c = siHeaderNameToIndex["Barcode Number"];
+		for(let r = 1; r < siWorksheet.rowCount; r++){
+			cell = siWorksheet.getCell(r,c);
+			if(cell.value == null)
+				continue;
+			siBCToRow[cell.value] = r;
+		}
 		
-		//oidToOwner
-		c = catHeaderNameToIndex["OwnerID"];
-		for(let r = 1; r < catWorksheet.rowCount; r++){
-			let cell = catWorksheet.getCell(r,c);
-			if(cell.value == null)
-				break;
-			oidToOwner[cell.value] = catWorksheet.getCell(r,c+1).value;
-		}
-		//cidToCondition
-		c = catHeaderNameToIndex["ConditionID"];
-		for(let r = 1; r < catWorksheet.rowCount; r++){
-			let cell = catWorksheet.getCell(r,c);
-			if(cell.value == null)
-				break;
-			cidToCondition[cell.value] = catWorksheet.getCell(r,c+1).value;
-		}
-		//midToManufacturer
-		c = catHeaderNameToIndex["ManufacturerID"];
-		for(let r = 1; r < catWorksheet.rowCount; r++){
-			let cell = catWorksheet.getCell(r,c);
-			if(cell.value == null)
-				break;
-			midToManufacturer[cell.value] = catWorksheet.getCell(r,c+1).value;
+		//man <-> id
+		let cMan = manHeaderNameToIndex["Manufacturer"];
+		let cManID = manHeaderNameToIndex["ManufacturerID"];
+		for(let r = 1; r < manWorksheet.rowCount; r++){
+			let cellMan = manWorksheet.getCell(r,cMan);
+			let cellManID = manWorksheet.getCell(r,cManID);
+			if(cellMan.value == null || cellManID.value == null)
+				continue;
+			manToID[cellMan.value] = cellManID.value;
+			idToMan[cellManID.value] = cellMan.value;
 		}
 		
 		console.log("Done.");
-		
 	}catch (err) {
 		console.log("ERROR: " + err.message);
 	}
 	
 }
+
+
 /*
 const getItemByPN = function(partNumber){
 	let r = invPnToRow[partNumber];
@@ -218,11 +140,16 @@ const getItemByPN = function(partNumber){
 }
 */
 
-const addScan = async function(scanInput, amount){
+//params is [scanInput]
+const addItemByScan = async function(params){
+	
 	try{
-		let data = bp.parse(scanInput);
-		let r = invBCToRow[data.barcode];
-		let cell;
+		let data = bp.parse(params[0]);
+		let barcode = data.barcode;
+		if(data.pre && data.id && data.pn && data.post){
+			barcode = data.pre + data.id + data.pn + data.post;
+		}
+		let r = invBCToRow[barcode];
 		
 		if(r == null){
 			//New Item
@@ -242,27 +169,29 @@ const addScan = async function(scanInput, amount){
 			}
 			
 			//add to dictionary
-			invBCToRow[data.barcode] = r;
-			//insert barcode
-			cell = invWorksheet.getCell(r, invHeaderNameToIndex["Barcode Number"]);
-			cell.value = data.barcode;
-			if(data.pn){
-				cell = invWorksheet.getCell(r, invHeaderNameToIndex["Part Number"]);
-				cell.value = data.pn;
-			}
-			if(data.id){
-				cell = invWorksheet.getCell(r, invHeaderNameToIndex["Manufacturer"]);
-				let m = data.id;
-				if(midToManufacturer[data.id]){
-					m = midToManufacturer[data.id];
-				}
-				cell.value = m;
-			}
-			
+			invBCToRow[barcode] = r;
+		}
+		
+		//populate entry
+		let cell = invWorksheet.getCell(r, invHeaderNameToIndex["Barcode Number"]);
+		if(cell.value == null || cell.value == ''){
+			cell.value = barcode;
+		}
+		cell = invWorksheet.getCell(r, invHeaderNameToIndex["ManufacturerID"]);
+		if(data.id && (cell.value == null || cell.value == '')){
+			cell.value = data.id;
+		}
+		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Manufacturer"]);
+		if(data.id && idToMan[data.id] && (cell.value == null || cell.value == '')){
+			cell.value = idToMan[data.id];
+		}
+		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Part Number"]);
+		if(data.pn && (cell.value == null || cell.value == '')){
+			cell.value = data.pn;
 		}
 		
 		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Quantity"]);
-		cell.value += amount;
+		cell.value += 1;
 		
 		await invWorksheet.saveUpdatedCells();
 		console.log('added');
@@ -271,8 +200,230 @@ const addScan = async function(scanInput, amount){
 	}
 }
 
+//params is [scanInput]
+const removeItemByScan = async function(params){
+	
+	try{
+		let data = bp.parse(params[0]);
+		let barcode = data.barcode;
+		//custom inventory removal
+		if(data.pre == customPre){
+			
+			let r = siBCToRow[barcode];
+			if(r == null){
+				//item does not exist
+				return;
+			}
+			
+			let cell = siWorksheet.getCell(r, siHeaderNameToIndex["Quantity"]);
+			if(cell.value > 0){
+				cell.value -= 1;
+			}
+			
+			await siWorksheet.saveUpdatedCells();
+			return;
+		}
+		
+		if(data.pre && data.id && data.pn && data.post){
+			barcode = data.pre + data.id + data.pn + data.post;
+		}
+		let r = invBCToRow[barcode];
+		if(r == null){
+			//item does not exist
+			return;
+		}
+		
+		let cell = invWorksheet.getCell(r, invHeaderNameToIndex["Quantity"]);
+		if(cell.value > 0){
+			cell.value -= 1;
+		}
+		
+		await invWorksheet.saveUpdatedCells();
+		
+	}catch (err) {
+		console.log("ERROR: " + err.message);
+	}
+}
 
 
+//params is [itemInfo]
+const addCustomItem = async function(params){
+	
+	try{
+		//low on space add rows
+		let r = Object.keys(siBCToRow).length + 1;
+		if(r == siWorksheet.rowCount){
+			await siWorksheet.resize({
+				rowCount: siWorksheet.rowCount + 100, 
+				columnCount: siWorksheet.columnCount
+			});
+			await siWorksheet.loadCells({
+				"startRowIndex": 1,
+				"endRowIndex": siWorksheet.rowCount,
+				"startColumnIndex": 0,
+				"endColumnIndex": siWorksheet.columnCount
+			});
+		}
+		
+		//add to dictionary
+		siBCToRow[params[0].barcode] = r;
+		
+		//populate entry
+		let cell = siWorksheet.getCell(r, siHeaderNameToIndex["Barcode Number"]);
+		if(cell.value == null || cell.value == ''){
+			cell.value = params[0].barcode;
+		}
+		cell = siWorksheet.getCell(r, siHeaderNameToIndex["Manufacturer"]);
+		if(params[0].man && idToMan[params[0].man] && (cell.value == null || cell.value == '')){
+			cell.value = idToMan[params[0].man];
+		}
+		cell = siWorksheet.getCell(r, siHeaderNameToIndex["Part Number"]);
+		if(params[0].pn && (cell.value == null || cell.value == '')){
+			cell.value = params[0].pn;
+		}
+		cell = siWorksheet.getCell(r, siHeaderNameToIndex["Owner"]);
+		if(params[0].own && (cell.value == null || cell.value == '')){
+			cell.value = params[0].own;
+		}
+		cell = siWorksheet.getCell(r, siHeaderNameToIndex["Price"]);
+		if(params[0].price && (cell.value == null || cell.value == '')){
+			cell.value = params[0].price;
+		}
+		cell = siWorksheet.getCell(r, siHeaderNameToIndex["Description"]);
+		if(params[0].dec && (cell.value == null || cell.value == '')){
+			cell.value = params[0].dec;
+		}
+		cell = siWorksheet.getCell(r, siHeaderNameToIndex["Details"]);
+		if(params[0].det && (cell.value == null || cell.value == '')){
+			cell.value = params[0].det;
+		}
+		
+		
+		
+		cell = siWorksheet.getCell(r, siHeaderNameToIndex["Quantity"]);
+		cell.value = 1;
+		
+		await siWorksheet.saveUpdatedCells();
+		console.log('added');
+	}catch (err) {
+		console.log("ERROR: " + err.message);
+	}
+}
+
+const getUniqueCustomBarcode = function(pn){
+	//construct barcode value
+	let postStr = ';'+pn+';';
+	for(let i = 0; i < 1000000; i++){
+		let preStr = customPre+';'+i;
+		if(!siBCToRow[preStr+postStr]){
+			return preStr+postStr;
+		}
+	}
+	return null;
+}
+
+const getItemByScan = function(scanInput){
+	try{
+		let data = bp.parse(scanInput);
+		let item = {};
+		let barcode = data.barcode;
+		//custom inventory search
+		if(data.pre == customPre){
+			
+			let r = siBCToRow[barcode];
+			
+			if(r == null){
+				//item does not exist
+				return item;
+			}
+			
+			let cell = siWorksheet.getCell(r, siHeaderNameToIndex["Manufacturer"]);
+			if(cell.value && cell.value != ''){
+				item.man = cell.value;
+			}
+			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Part Number"]);
+			if(cell.value && cell.value != ''){
+				item.pn = cell.value;
+			}
+			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Quantity"]);
+			if(cell.value && cell.value != ''){
+				item.amt = cell.value;
+			}
+			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Owner"]);
+			if(cell.value && cell.value != ''){
+				item.own = cell.value;
+			}
+			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Price"]);
+			if(cell.value && cell.value != ''){
+				item.price = cell.value;
+			}
+			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Description"]);
+			if(cell.value && cell.value != ''){
+				item.dec = cell.value;
+			}
+			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Details"]);
+			if(cell.value && cell.value != ''){
+				item.det = cell.value;
+			}
+			
+			return item;
+		}
+		if(data.pre && data.id && data.pn && data.post){
+			barcode = data.pre + data.id + data.pn + data.post;
+		}
+		let r = invBCToRow[barcode];
+		
+		if(r == null){
+			//item does not exist
+			return item;
+		}
+		
+		let cell = invWorksheet.getCell(r, invHeaderNameToIndex["Manufacturer"]);
+		if(cell.value && cell.value != ''){
+			item.man = cell.value;
+		}
+		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Part Number"]);
+		if(cell.value && cell.value != ''){
+			item.pn = cell.value;
+		}
+		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Quantity"]);
+		if(cell.value && cell.value != ''){
+			item.amt = cell.value;
+		}
+		cell = invWorksheet.getCell(r, invHeaderNameToIndex["MSRP"]);
+		if(cell.value && cell.value != ''){
+			item.msrp = cell.value;
+		}
+		//cell = invWorksheet.getCell(r, invHeaderNameToIndex["Price"]);
+		//if(cell.value && cell.value != ''){
+		//	item.price = cell.value;
+		//}
+		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Description"]);
+		if(cell.value && cell.value != ''){
+			item.dec = cell.value;
+		}
+		return item;
+		
+		
+	}catch (err) {
+		console.log("ERROR: " + err.message);
+	}
+}
+
+const Spreadsheet = function(){
+	return ({
+		init,
+		addItemByScan,
+		idToMan,
+		manToID,
+		addCustomItem,
+		getUniqueCustomBarcode,
+		removeItemByScan,
+		getItemByScan
+	});
+}
+
+export default Spreadsheet;
 
 
 
