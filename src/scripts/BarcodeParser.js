@@ -43,7 +43,7 @@ const parseEAN13 = function(ean13Barcode){
 	return ({
 		pre:ean13Barcode.substr(0,1),
 		post:ean13Barcode.substr(12,1),
-		id:ean13Barcode.substr(2,6),
+		id:ean13Barcode.substr(1,6),
 		pn:ean13Barcode.substr(7,5),
 		barcode:ean13Barcode
 	});
