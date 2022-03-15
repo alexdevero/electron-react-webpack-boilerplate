@@ -52,7 +52,10 @@ const print = function(){
 	
 	console.log(barcode);
 	//print barcode
-	queue.queueTask(bg.print, [barcode]);
+	for(let i = 0; i < amt; i++){
+		queue.queueTask(bg.print, [barcode]);
+	}
+	
 	
 	setMsg('Print Requested: '+amt+' - '+ss.idToMan[man]+' #'+pn);
 	setPn('');

@@ -108,7 +108,6 @@ const print = async function(params){
 </DesktopLabel>`;
 
 		await dymo.print('DYMO LabelWriter 450 Turbo', labelXml);
-		console.log(labelXml);
 	}catch (err) {
 		console.log("ERROR: " + err.message);
 	}
