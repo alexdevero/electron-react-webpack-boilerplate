@@ -146,6 +146,22 @@ const addItemByScan = async function(params){
 	try{
 		let data = bp.parse(params[0]);
 		let barcode = data.barcode;
+		
+		if(data.pre == customPre){
+			
+			let r = siBCToRow[barcode];
+			if(r == null){
+				//can only add custom items by scan if they exist
+				return;
+			}
+			
+			let cell = siWorksheet.getCell(r, siHeaderNameToIndex["Quantity"]);
+			cell.value = 1;
+			
+			await siWorksheet.saveUpdatedCells();
+			return;
+		}
+		
 		if(data.pre && data.id && data.pn && data.post){
 			barcode = data.pre + data.id + data.pn + data.post;
 		}
