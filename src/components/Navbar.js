@@ -1,31 +1,32 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
 
 function Navbar() {
     
+const [hist, setHist] = React.useState([]);
 
 return(
     <div className="Nav main">
-        <Link className="Nav menuOption" to="/add">
-			<div className="tab">Add</div>
-		</Link>
+        <NavLink className="Nav menuOption" to="/add">
+			Add
+		</NavLink>
 				
-		<Link className="Nav menuOption" to="/create">
-			<div className="tab">Create</div>
-		</Link>
+		<NavLink className="Nav menuOption" to="/create">
+			Create
+		</NavLink>
 		
-		<Link className="Nav menuOption" to="/custom">
-			<div className="tab">Add Custom</div>
-		</Link>
+		<NavLink className="Nav menuOption" to="/custom">
+			Add Custom
+		</NavLink>
 		
-		<Link className="Nav menuOption" to="/remove">
-			<div className="tab">Remove</div>
-		</Link>
-		<Link className="Nav menuOption" to="/search">
-			<div className="tab">Search</div>
-		</Link>
+		<NavLink className="Nav menuOption" to="/remove">
+			Remove
+		</NavLink>
+		<NavLink className="Nav menuOption" to="/search">
+			Search
+		</NavLink>
     </div>
     )
 }

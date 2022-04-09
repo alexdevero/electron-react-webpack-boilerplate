@@ -9,6 +9,7 @@ dist/
 node_modules/
 *.compiled.*
 src/config
+sesh
 
 # Folder config file #
 ######################

@@ -1,0 +1,29 @@
+.main{
+    font-family: Fira Sans;
+    font-size: 20px;
+}
+
+.record{
+	font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+}
+
+select{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: inherit;
+}
+
+input{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: inherit;
+}
+
+textarea{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: inherit;
+}
+
+button{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: inherit;
+}

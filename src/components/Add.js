@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScannerListener } from './';
-
+import './index.css';
 
 function Add({queue, ss, bp, bg}) {
 
@@ -33,7 +33,7 @@ const onScan = function(s){
 
 const createRecord = function(scanRecord){
 	return (
-		<div key={scanRecord.time.getTime()}>
+		<div className="Add record" key={scanRecord.time.getTime()}>
 		{scanRecord.time.toLocaleTimeString("en-US")} #{scanRecord.pn}
 		</div>
 	);

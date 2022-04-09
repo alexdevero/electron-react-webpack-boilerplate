@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScannerListener } from './';
+import './index.css';
 
 
 function Search({queue, ss, bp, bg}) {
@@ -14,26 +15,42 @@ const onScan = async function(s){
 }
 
 const createItem = function(){
-	return (
-		<div >
-		{item.man?item.man:'no man name'} #{item.pn?item.pn:'no part number'}<br/>
-		{item.price?'Price: $'+item.price:'no price'} <br/>
-		{item.msrp?'MSRP: $'+item.msrp:''} <br/>
-		{item.own?'Owner: '+item.own:''} <br/>
-		{item.dec?item.dec:'no decscription'} <br/>
-		{item.det?item.det:''} <br/>
-		In stock: {item.amt?+item.amt:'0'}<br/>
-		</div>
-	);
+	let parts = [];
+	for(let [name, val] of Object.entries(item)){
+		
+		if(typeof(val) == 'string' || typeof(val) == 'number'){
+			parts.push(
+				<div key={name}>
+					{name}<br/>
+					<textarea onChange={(e) => {
+							let newItem = {
+								... item
+							}
+							newItem[name] = e.target.value;
+							setItem(newItem);
+					}} value={item[name]}></textarea><br/>
+					
+				</div>
+			);
+		}
+	}
+	return parts;
+}
+
+const save = function(){
+	queue.queueTask(ss.updateItem, [item]);
 }
 
 return(
     <div className="Search main">
 		<ScannerListener onScan={onScan} />
-		Search/Look-Up Mode.<br/>
+		Search/Edit Mode.<br/>
 		Make sure this window is in focus then scan barcode to get item information.<br/><br/>
 		
-		{createItem()}
+		{createItem()}<br/>
+		
+		<button onClick={()=>save()}>Save</button><br/>
+		
     </div>
 )
 }

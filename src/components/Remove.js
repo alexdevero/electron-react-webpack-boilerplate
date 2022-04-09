@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScannerListener } from './';
+import './index.css';
 
 
 function Remove({queue, ss, bp, bg}) {
@@ -33,7 +34,7 @@ const onScan = function(s){
 
 const createRecord = function(scanRecord){
 	return (
-		<div key={scanRecord.time.getTime()}>
+		<div className="Remove record" key={scanRecord.time.getTime()}>
 		removed  #{scanRecord.pn} @ {scanRecord.time.toLocaleTimeString("en-US")}
 		</div>
 	);
@@ -44,7 +45,7 @@ const createHist = function(){
 }
 
 return(
-    <div className="Add main">
+    <div className="Remove main">
 		<ScannerListener onScan={onScan} />
 		Check-Out/Remove Mode.<br/>
 		Make sure this window is in focus then scan barcode to decrement item quantity by 1.<br/><br/>

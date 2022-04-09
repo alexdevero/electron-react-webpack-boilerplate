@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScannerListener } from './';
+import './index.css';
 
 function Create({queue, ss, bp, bg}) {
 

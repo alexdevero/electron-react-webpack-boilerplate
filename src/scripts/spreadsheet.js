@@ -233,7 +233,7 @@ const removeItemByScan = async function(params){
 			
 			let cell = siWorksheet.getCell(r, siHeaderNameToIndex["Quantity"]);
 			if(cell.value > 0){
-				cell.value -= 1;
+				cell.value = 0;
 			}
 			
 			await siWorksheet.saveUpdatedCells();
@@ -342,6 +342,7 @@ const getItemByScan = function(scanInput){
 	try{
 		let data = bp.parse(scanInput);
 		let item = {};
+		item.data = data;
 		let barcode = data.barcode;
 		//custom inventory search
 		if(data.pre == customPre){
@@ -353,33 +354,9 @@ const getItemByScan = function(scanInput){
 				return item;
 			}
 			
-			let cell = siWorksheet.getCell(r, siHeaderNameToIndex["Manufacturer"]);
-			if(cell.value && cell.value != ''){
-				item.man = cell.value;
-			}
-			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Part Number"]);
-			if(cell.value && cell.value != ''){
-				item.pn = cell.value;
-			}
-			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Quantity"]);
-			if(cell.value && cell.value != ''){
-				item.amt = cell.value;
-			}
-			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Owner"]);
-			if(cell.value && cell.value != ''){
-				item.own = cell.value;
-			}
-			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Price"]);
-			if(cell.value && cell.value != ''){
-				item.price = cell.value;
-			}
-			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Description"]);
-			if(cell.value && cell.value != ''){
-				item.dec = cell.value;
-			}
-			cell = siWorksheet.getCell(r, siHeaderNameToIndex["Details"]);
-			if(cell.value && cell.value != ''){
-				item.det = cell.value;
+			for(let [name, index] of Object.entries(siHeaderNameToIndex)){
+				let cell = siWorksheet.getCell(r, index);
+				item[name] = cell.value;
 			}
 			
 			return item;
@@ -394,31 +371,68 @@ const getItemByScan = function(scanInput){
 			return item;
 		}
 		
-		let cell = invWorksheet.getCell(r, invHeaderNameToIndex["Manufacturer"]);
-		if(cell.value && cell.value != ''){
-			item.man = cell.value;
+		for(let [name, index] of Object.entries(invHeaderNameToIndex)){
+			let cell = invWorksheet.getCell(r, index);
+			if(cell.value == null){
+				item[name] = '';
+				continue;
+			}
+			item[name] = cell.value;
 		}
-		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Part Number"]);
-		if(cell.value && cell.value != ''){
-			item.pn = cell.value;
-		}
-		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Quantity"]);
-		if(cell.value && cell.value != ''){
-			item.amt = cell.value;
-		}
-		cell = invWorksheet.getCell(r, invHeaderNameToIndex["MSRP"]);
-		if(cell.value && cell.value != ''){
-			item.msrp = cell.value;
-		}
-		//cell = invWorksheet.getCell(r, invHeaderNameToIndex["Price"]);
-		//if(cell.value && cell.value != ''){
-		//	item.price = cell.value;
-		//}
-		cell = invWorksheet.getCell(r, invHeaderNameToIndex["Description"]);
-		if(cell.value && cell.value != ''){
-			item.dec = cell.value;
-		}
+		
 		return item;
+		
+		
+	}catch (err) {
+		console.log("ERROR: " + err.message);
+	}
+}
+
+//params is [item]
+const updateItem = async function(params){
+	try{
+		let item = params[0];
+		let barcode = item.data.barcode;
+		//custom inventory search
+		if(item.data.pre == customPre){
+			
+			let r = siBCToRow[barcode];
+			
+			if(r == null){
+				//item does not exist
+				return;
+			}
+			
+			for(let [name, val] of Object.entries(item)){
+				if(siHeaderNameToIndex[name] && siHeaderNameToIndex[name] > 2){
+					let cell = siWorksheet.getCell(r, siHeaderNameToIndex[name]);
+					cell.value = val;
+				}
+				
+			}
+			await siWorksheet.saveUpdatedCells();
+			console.log('updated custom item');
+			return;
+		}
+		if(item.data.pre && item.data.id && item.data.pn && item.data.post){
+			barcode = item.data.pre + item.data.id + item.data.pn + item.data.post;
+		}
+		let r = invBCToRow[barcode];
+		
+		if(r == null){
+			//item does not exist
+			return;
+		}
+		
+		for(let [name, val] of Object.entries(item)){
+			if(invHeaderNameToIndex[name] && invHeaderNameToIndex[name] > 3){
+				let cell = invWorksheet.getCell(r, invHeaderNameToIndex[name]);
+				cell.value = val;
+			}
+			
+		}
+		await invWorksheet.saveUpdatedCells();
+		console.log('updated item');
 		
 		
 	}catch (err) {
@@ -435,7 +449,8 @@ const Spreadsheet = function(){
 		addCustomItem,
 		getUniqueCustomBarcode,
 		removeItemByScan,
-		getItemByScan
+		getItemByScan,
+		updateItem
 	});
 }
 
