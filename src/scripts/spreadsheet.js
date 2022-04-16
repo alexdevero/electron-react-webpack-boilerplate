@@ -20,7 +20,7 @@ let manHeaderNameToIndex = {};
 let manToID = {};
 let idToMan = {};
 
-const customPre = 27;
+const customPre = 27;//dont change
 
 
 //params is [config, auth]
@@ -263,6 +263,7 @@ const removeItemByScan = async function(params){
 
 
 //params is [itemInfo]
+//TODO remove column name dependency
 const addCustomItem = async function(params){
 	
 	try{
@@ -389,9 +390,13 @@ const getItemByScan = function(scanInput){
 }
 
 //params is [item]
+//TODO remove column number dependency
 const updateItem = async function(params){
 	try{
 		let item = params[0];
+		if(item.data == null)
+			return;
+		
 		let barcode = item.data.barcode;
 		//custom inventory search
 		if(item.data.pre == customPre){
@@ -404,7 +409,7 @@ const updateItem = async function(params){
 			}
 			
 			for(let [name, val] of Object.entries(item)){
-				if(siHeaderNameToIndex[name] && siHeaderNameToIndex[name] > 2){
+				if(siHeaderNameToIndex[name] && siHeaderNameToIndex[name] > 3){
 					let cell = siWorksheet.getCell(r, siHeaderNameToIndex[name]);
 					cell.value = val;
 				}
