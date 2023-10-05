@@ -57,7 +57,7 @@
     "babel-loader": "^8.2.5",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
-    "electron": "^19.0.1",
+    "electron": "^22.3.25",
     "electron-devtools-installer": "^3.2.0",
     "electron-packager": "^15.5.1",
     "file-loader": "^6.2.0",
